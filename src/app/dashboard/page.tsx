@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { logout } from "../(auth)/logout/action";
 
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -71,6 +72,11 @@ export default async function DashboardPage() {
           </CardContent>
 
           <CardFooter className="flex flex-col gap-3 pb-8">
+            <div className="w-full">
+              <Button asChild variant="secondary" className="w-full h-11 font-medium shadow-sm">
+                <Link href="/upload">Upload File</Link>
+              </Button>
+            </div>
             <form action={logout} className="w-full">
               <Button
                 variant="destructive"
