@@ -1,8 +1,9 @@
+// Navbar.tsx (Server Component)
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { logout } from "@/app/(auth)/logout/action";
+import NavButtons from "./NavButtons";
 
 export default async function Navbar() {
   const session = await auth.api.getSession({
@@ -16,37 +17,7 @@ export default async function Navbar() {
           MyApp
         </Link>
 
-        <nav className="flex items-center gap-3">
-          <Link href="/">
-            <Button variant="ghost">Home</Button>
-          </Link>
-
-          {!session && (
-            <>
-              <Link href="/login">
-                <Button variant="ghost">Login</Button>
-              </Link>
-              <Link href="/signup">
-                <Button>Sign up</Button>
-              </Link>
-            </>
-          )}
-
-          {session && (
-            <>
-              <Link href="/dashboard">
-                <Button variant="ghost">Dashboard</Button>
-              </Link>
-
-              {/* ✅ Server Action logout */}
-              <form action={logout}>
-                <Button type="submit" variant="destructive">
-                  Logout
-                </Button>
-              </form>
-            </>
-          )}
-        </nav>
+        <NavButtons session={!!session} logout={logout} />
       </div>
     </header>
   );
