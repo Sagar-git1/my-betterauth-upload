@@ -3,23 +3,35 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 
-export async function login(formData: FormData) {
+type LoginState = {
+  error?: string;
+};
+
+export async function login(
+  _prevState: LoginState,
+  formData: FormData
+): Promise<LoginState> {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
   if (!email || !password) {
-    throw new Error("Missing credentials");
+    return { error: "Email and password are required" };
   }
 
-  const result = await auth.api.signInEmail({
-    body: {
-      email,
-      password,
-    },
-  });
+  try {
+    const result = await auth.api.signInEmail({
+      body: {
+        email,
+        password,
+      },
+    });
 
-  if (!result) {
-    throw new Error("Invalid email or password");
+    if (!result) {
+      return { error: "Invalid email or password" };
+    }
+  } catch (err) {
+    // ✅ Catch Better Auth error
+    return { error: "Invalid email or password" };
   }
 
   redirect("/dashboard");
