@@ -3,25 +3,56 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_MIME_TYPES = [
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "application/pdf",
+];
+
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const f = e.target.files?.[0] ?? null;
-    setFile(f);
+    const selectedFile = e.target.files?.[0] ?? null;
+
     setError(null);
+    setSuccess(null);
+
+    if (!selectedFile) {
+      setFile(null);
+      return;
+    }
+
+    // ✅ Client-side validation
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      setError("File too large (max 5MB)");
+      setFile(null);
+      return;
+    }
+
+    if (!ALLOWED_MIME_TYPES.includes(selectedFile.type)) {
+      setError("Unsupported file type");
+      setFile(null);
+      return;
+    }
+
+    setFile(selectedFile);
   }
 
   async function handleUpload() {
     if (!file) {
-      setError("Please select a file to upload.");
+      setError("Please select a valid file to upload");
       return;
     }
 
     setUploading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const formData = new FormData();
@@ -32,18 +63,18 @@ export default function UploadPage() {
         body: formData,
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Upload failed");
+        // ✅ Backend error mapped cleanly to UI
+        setError(data?.error || "Upload failed");
+        return;
       }
 
-      const data = await res.json();
-      alert(`Uploaded successfully: ${data.name}`);
-
+      setSuccess(`Uploaded successfully: ${data.name}`);
       setFile(null);
-    } catch (err) {
-      console.error(err);
-      setError(err instanceof Error ? err.message : "Upload failed");
+    } catch {
+      setError("Upload failed. Please try again.");
     } finally {
       setUploading(false);
     }
@@ -67,12 +98,18 @@ export default function UploadPage() {
             />
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {/* Error */}
+          {error && <p className="text-sm text-red-600 font-medium">{error}</p>}
+
+          {/* Success */}
+          {success && (
+            <p className="text-sm text-green-600 font-medium">{success}</p>
+          )}
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <Button
               onClick={handleUpload}
-              disabled={uploading}
+              disabled={uploading || !file}
               className="flex-1 h-11 font-medium"
             >
               {uploading ? "Uploading..." : "Upload"}
