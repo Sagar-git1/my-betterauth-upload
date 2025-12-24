@@ -15,16 +15,6 @@ export default function HomePage() {
           Built with Next.js 15, Better Auth, Drizzle ORM, Neon Postgres,
           Cloudflare R2 and shadcn/ui.
         </p>
-
-        <div className="flex justify-center gap-4">
-          <Link href="/signup">
-            <Button size="lg">Get started</Button>
-          </Link>
-
-          <Button asChild size="lg" variant="outline">
-            <Link href="/login">Login</Link>
-          </Button>
-        </div>
       </div>
     </main>
   );
