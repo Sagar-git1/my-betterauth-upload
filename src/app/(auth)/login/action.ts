@@ -30,7 +30,6 @@ export async function login(
       return { error: "Invalid email or password" };
     }
   } catch (err) {
-    // ✅ Catch Better Auth error
     return { error: "Invalid email or password" };
   }
 
