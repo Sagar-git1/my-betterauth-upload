@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Next.js 15 Auth + Uploads Starter
 
-## Getting Started
+A **production-ready full-stack starter** built with modern tooling:
 
-First, run the development server:
+- **Next.js 15 (App Router)**
+- **Better Auth**
+- **Drizzle ORM**
+- **Neon Postgres**
+- **Cloudflare R2**
+- **shadcn/ui**
+- **Vercel-ready**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This project demonstrates **secure authentication**, **protected routes**, and **authenticated file uploads** with clean architecture and reasonable git history.
+
+---
+
+## ✨ Features
+
+- 🔐 Email & password authentication (signup / login / logout)
+- 🍪 Secure session cookies (Better Auth)
+- 🧠 Server Actions (no client-side auth hacks)
+- 🔒 Middleware-protected routes
+- 🗄️ Drizzle ORM with Neon Postgres
+- ☁️ File uploads to Cloudflare R2
+- 🎨 Modern UI using shadcn/ui
+- ⏳ Loading states for auth actions
+- 🚀 Ready for Vercel deployment
+
+---
+
+## 📁 Project Structure
+
+src/
+├── app/
+│ ├── (auth)/
+│ │ ├── login/
+│ │ ├── signup/
+│ │ └── logout/
+│ ├── api/
+│ │ ├── auth/[...all]/ # Better Auth handlers
+│ │ └── upload/ # Cloudflare R2 upload API
+│ ├── dashboard/ # Protected page
+│ ├── upload/ # Upload UI
+│ └── page.tsx # Homepage
+├── components/
+│ ├── navbar.tsx
+│ ├── form-submit.tsx
+│ └── ui/ # shadcn components
+├── db/
+│ ├── schema.ts
+│ └── auth-schema.ts
+├── lib/
+│ ├── auth.ts
+│ ├── db.ts
+│ └── r2.ts
+└── middleware.ts
+
+---
+
+## ⚙️ Environment Variables
+
+Create a `.env` file in the root:
+
+```env
+# Database (Neon)
+DATABASE_URL=postgresql://...
+
+# Better Auth
+BETTER_AUTH_SECRET=your-secure-secret
+BETTER_AUTH_URL=http://localhost:3000
+
+# Cloudflare R2
+R2_ACCOUNT_ID=xxxx
+R2_ACCESS_KEY_ID=xxxx
+R2_SECRET_ACCESS_KEY=xxxx
+R2_BUCKET_NAME=your-bucket
+R2_PUBLIC_URL=https://your-public-r2-url (optional)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+pnpm dev
+pnpm drizzle:studio
+pnpm drizzle:migrate
+pnpm drizzle:generate
